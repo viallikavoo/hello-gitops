@@ -26,7 +26,7 @@ yq e '
 
 yq e '
   .metadata.name = strenv(appName) |
-  .spec.template.metadata.name = strenv(appName)+"-{{name}}" |
+  .spec.template.metadata.name = strenv(appName)+"-{{cluster}}" |
   .metadata.namespace = strenv(namespace) |
   .spec.template.spec.project = strenv(namespace) |
   .spec.template.spec.source.repoURL = strenv(repoURL) |
