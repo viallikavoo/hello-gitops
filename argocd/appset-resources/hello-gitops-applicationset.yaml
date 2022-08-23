@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
   name: hello-gitops
-  namespace: project
+  namespace: argocd
 spec:
   generators:
     - list:
