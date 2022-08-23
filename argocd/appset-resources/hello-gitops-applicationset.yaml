@@ -5,17 +5,29 @@ metadata:
   namespace: project
 spec:
   generators:
-    - clusters: {}
+    - list:
+        elements:
+          - cluster: stag
+            #     - cluster: stag2
+      metadata:
+        name: 'hello-gitops-{{cluster}}'
+      spec:
+        project: ${appName}
+        source:
+          path: kustomize/overlays/{{cluster}}
+          repoURL: ${repoURL}
+          targetRevision: ${branch}
+        # Destination cluster and namespace to deploy the application
+        destination:
+          server: '{{server}}'
+          namespace: ${namespace}
   template:
     metadata:
-      name: 'hello-gitops-{{name}}'
+      name: hello-gitops-{{name}}
     spec:
       project: project
       source:
-        path: kustomize/overlays/{{name}}
         repoURL: git@github.com:viallikavoo/hello-gitops.git
         targetRevision: main
-      # Destination cluster and namespace to deploy the application
       destination:
-        server: '{{server}}'
         namespace: project
