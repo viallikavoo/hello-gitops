@@ -10,21 +10,13 @@ jobs:
     - name: Check out code
       uses: actions/checkout@v2
 
-    - name: Setup ArgoCD CLI and jq
-      run: |
-        curl -sSL -o /usr/local/bin/argocd "https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64" && chmod +x /usr/local/bin/argocd
-        curl -sLo /usr/local/bin/jq https://stedolan.github.io/jq/download/linux64/jq && chmod +x /usr/local/bin/jq
-
+  
     - name: Provision ArgoCD Resources
       env:
         GITOPS_ARGOCD_TOKEN: ${{ secrets.GITOPS_ARGOCD_TOKEN }}
-        GITOPS_BUILDUSER_SSH_KEY: ${{ secrets.GITOPS_BUILDUSER_SSH_KEY }}
       run: |
-        export repoURL=$(cat argocd/bootstrap/scripts/bootstrap.json | jq -r .repoURL)
         export appName=$(cat argocd/bootstrap/scripts/bootstrap.json | jq -r .appName)
         cd argocd/bootstrap/scripts
-        echo "${{ secrets.GITOPS_BUILDUSER_SSH_KEY }}" > key
-        chmod 600 key
         chmod +x argocd-bootstrap.sh
         ./argocd-bootstrap.sh
 
