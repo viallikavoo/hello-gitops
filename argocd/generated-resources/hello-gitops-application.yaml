@@ -6,12 +6,12 @@ metadata:
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
-  project: hello-gitops
+  project: project
   source:
     path: argocd/appset-resources
-    repoURL: git@github.com:Siteimprove/hello-gitops.git
-    targetRevision: develop
+    repoURL: git@github.com:viallikavoo/hello-gitops.git
+    targetRevision: main
   # Destination cluster and namespace to deploy the application
   destination:
     server: https://kubernetes.default.svc
-    namespace: hello-gitops
+    namespace: project

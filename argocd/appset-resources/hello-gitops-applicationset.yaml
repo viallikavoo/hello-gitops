@@ -14,8 +14,8 @@ spec:
       source:
         path: kustomize/overlays/{{name}}
         repoURL: git@github.com:viallikavoo/hello-gitops.git
-        targetRevision: develop
+        targetRevision: main
       # Destination cluster and namespace to deploy the application
       destination:
         server: '{{server}}'
-        namespace: Project
+        namespace: project
