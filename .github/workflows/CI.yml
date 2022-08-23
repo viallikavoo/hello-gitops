@@ -1,0 +1,70 @@
+name: CI
+
+on:
+  push:
+    branches: [ develop ] #branches will be changes to [develop, staging, master]
+env:
+  REGISTRY: ghcr.io
+  APP_NAME: hello-gitops
+jobs:
+  build:
+    name: Build
+    runs-on: self-hosted
+    steps:
+    - name: Set up Go 1.x
+      uses: actions/setup-go@v2
+      with:
+        go-version: ^1.14
+
+    - name: Check out code
+      uses: actions/checkout@v2
+
+    - name: Test
+      run: |
+        CGO_ENABLED=0 go test ./...
+
+    - name: Log in to the Container registry
+      uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}        
+
+      -
+        name: Build and push
+        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+        with:
+          context: .
+          file: Dockerfile
+          push: true
+          tags: |
+           "${{ env.REGISTRY }}/viallikavoo/${{ env.APP_NAME }}:${{ github.sha }}"
+           "${{ env.REGISTRY }}/viallikavoo/${{ env.APP_NAME }}:latest_${GITHUB_REF##*/}_${{ github.sha }}"
+
+  deploy:
+    name: Deploy
+    runs-on: self-hosted
+    needs: build
+
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v2
+
+    - name: Setup Kustomize
+      run: |
+        cd /usr/local/bin
+        rm -rf kustomize
+        curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash
+
+    - name: Update Kubernetes resources
+      run: |
+       cd kustomize/base
+       kustomize edit set image hello-gitops=ghcr.io/viallikavoo/hello-gitops:$GITHUB_SHA
+       cat kustomization.yaml
+
+    - name: Commit files
+      run: |
+        git config --local user.email "hello-gitops@github.com"
+        git config --local user.name "hello-gitops"
+        git commit -am "Bump docker tag"
+        git push

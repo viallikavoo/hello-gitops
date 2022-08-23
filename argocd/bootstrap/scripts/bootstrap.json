@@ -1,0 +1,6 @@
+{
+  "namespace": "project",
+  "appName": "hello-gitops",
+  "repoURL": "git@github.com:viallikavoo/hello-gitops.git",
+  "registry": "ghcr.io/viallikavoo"
+}

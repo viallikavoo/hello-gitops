@@ -1,0 +1,47 @@
+name: Generate ArgoCD and Kustomize Yaml's
+
+on: [workflow_dispatch]
+
+jobs:
+  build:
+    name: Rendering Templates
+    runs-on: self-hosted
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v2
+
+    - name: Setup yq, jq, gh
+      run: |
+        wget https://github.com/mikefarah/yq/releases/download/v4.13.4/yq_linux_amd64 -O /usr/local/bin/yq && chmod +x /usr/local/bin/yq
+        curl -sLo /usr/local/bin/jq https://stedolan.github.io/jq/download/linux64/jq && chmod +x /usr/local/bin/jq
+        VERSION=`curl  "https://api.github.com/repos/cli/cli/releases/latest" | grep '"tag_name"' | sed -E 's/.*"([^"]+)".*/\1/' | cut -c2-`
+        wget https://github.com/cli/cli/releases/download/v${VERSION}/gh_${VERSION}_linux_amd64.tar.gz
+        tar xvf gh_${VERSION}_linux_amd64.tar.gz
+        sudo cp gh_${VERSION}_linux_amd64/bin/gh /usr/local/bin/
+        rm -rf gh_${VERSION}_linux_amd64 gh_${VERSION}_linux_amd64.tar.gz
+
+    - name: Render ArgoCD templates from bootstrap.json
+      run: |
+        export namespace=$(cat argocd/bootstrap/scripts/bootstrap.json | jq -r .namespace)
+        export appName=$(cat argocd/bootstrap/scripts/bootstrap.json | jq -r .appName)
+        export repoURL=$(cat argocd/bootstrap/scripts/bootstrap.json | jq -r .repoURL)
+        export registry=$(cat argocd/bootstrap/scripts/bootstrap.json | jq -r .registry)
+        cd argocd/bootstrap/scripts && chmod +x render-templates.sh
+        ./render-templates.sh
+
+    - name: Commit files and create a Pull Request
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        BASE=$(git branch --show-current)
+        git checkout -b bootstrap
+        git config --local user.email "vialli_kavoo@hotmail.com"
+        git config --local user.name "viallikavoo"
+        git add .
+        git commit -am "Add rendered files needed for ArgoCD"
+        git push --force --set-upstream origin bootstrap
+        gh pr create --title "Add Rendered ArgoCD yaml files and Kustomize files" --head "bootstrap" --base "${BASE}" --body "This adds the necessary files required to get argocd apps and kustomize yamls needs to deploy your app to K8s"
+
+    - name: Cleanup
+      run: |
+        rm /usr/local/bin/yq /usr/local/bin/jq /usr/local/bin/gh

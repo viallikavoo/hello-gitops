@@ -1,0 +1,17 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: ${appName}
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: ${namespace}
+  source:
+    path: argocd/appset-resources
+    repoURL: ${repoURL}
+    targetRevision: ${branch}
+  # Destination cluster and namespace to deploy the application
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: ${namespace}

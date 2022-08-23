@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: ${appName}
+  name: ${appName}
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: ${appName}
+  template:
+    metadata:
+      labels:
+        app: ${appName}
+    spec:
+      containers:
+        - image: ${appName}
+          name: ${appName}
+          ports:
+            - name: http
+              containerPort: 8080
+      imagePullSecrets:
+      - name: ${appName}-pull-secret

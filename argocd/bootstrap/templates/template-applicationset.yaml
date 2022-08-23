@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: ${appName}
+  namespace: argocd
+spec:
+  generators:
+  - clusters: {}
+  template:
+    metadata:
+      name: 'hello-gitops-{{name}}'
+    spec:
+      project: ${appName}
+      source:
+        path: kustomize/overlays/{{name}}
+        repoURL: ${repoURL}
+        targetRevision: ${branch}
+      # Destination cluster and namespace to deploy the application
+      destination:
+        server: '{{server}}'
+        namespace: ${namespace}
