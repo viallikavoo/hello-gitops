@@ -10,7 +10,7 @@ spec:
     metadata:
       name: 'hello-gitops-{{name}}'
     spec:
-      project: Project
+      project: project
       source:
         path: kustomize/overlays/{{name}}
         repoURL: git@github.com:viallikavoo/hello-gitops.git

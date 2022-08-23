@@ -17,7 +17,7 @@ done
 
 yq e '
   .metadata.name = strenv(appName) |
-  .spec.project = strenv(appName) |
+  .spec.project = strenv(namespace) |
   .spec.source.repoURL = strenv(repoURL) |
   .spec.source.targetRevision = strenv(BASE) |
   .spec.destination.namespace = strenv(namespace)
@@ -26,7 +26,7 @@ yq e '
 yq e '
   .metadata.name = strenv(appName) |
   .spec.template.metadata.name = strenv(appName)+"-{{name}}" |
-  .spec.template.spec.project = strenv(appName) |
+  .spec.template.spec.project = strenv(namespace) |
   .spec.template.spec.source.repoURL = strenv(repoURL) |
   .spec.template.spec.source.targetRevision = strenv(BASE) |
   .spec.template.spec.destination.namespace = strenv(namespace)
