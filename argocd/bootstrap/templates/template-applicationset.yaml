@@ -10,7 +10,7 @@ spec:
       - cluster: stag
 #     - cluster: stag2
     metadata:
-      name: 'hello-gitops-{{cluster}}'
+      name: 'hello-gitops-{{  }}'
     spec:
       project: ${appName}
       source:
