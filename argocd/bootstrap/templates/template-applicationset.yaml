@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
   name: ${appName}
-  namespace: ${namespace}
+  namespace: argocd
 spec:
   generators:
   - list:
