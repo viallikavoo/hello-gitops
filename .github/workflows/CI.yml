@@ -30,18 +30,18 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}        
 
-      -
-        name: Build and push
-        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
-        with:
-          context: .
-          file: Dockerfile
-          push: true
-          tags: |
-           "${{ env.REGISTRY }}/viallikavoo/${{ env.APP_NAME }}:${{ github.sha }}"
-           "${{ env.REGISTRY }}/viallikavoo/${{ env.APP_NAME }}:latest_${GITHUB_REF##*/}_${{ github.sha }}"
+    -
+      name: Build and push
+      uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+      with:
+        context: .
+        file: Dockerfile
+        push: true
+        tags: |
+          "${{ env.REGISTRY }}/viallikavoo/${{ env.APP_NAME }}:${{ github.sha }}"
+          "${{ env.REGISTRY }}/viallikavoo/${{ env.APP_NAME }}:latest_${GITHUB_REF##*/}_${{ github.sha }}"
 
-  deploy:
+deploy:
     name: Deploy
     runs-on: self-hosted
     needs: build
