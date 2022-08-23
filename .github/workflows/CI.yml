@@ -39,7 +39,6 @@ jobs:
         push: true
         tags: |
           "${{ env.REGISTRY }}/viallikavoo/${{ env.APP_NAME }}:${{ github.sha }}"
-          "${{ env.REGISTRY }}/viallikavoo/${{ env.APP_NAME }}:latest_${GITHUB_REF##*/}_${{ github.sha }}"
 
   deploy:
     name: Deploy
