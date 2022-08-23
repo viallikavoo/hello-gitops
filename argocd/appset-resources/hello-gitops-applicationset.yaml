@@ -20,5 +20,5 @@ spec:
         targetRevision: main
       # Destination cluster and namespace to deploy the application
       destination:
-        server: '{{server}}'
+        server: '{{cluster}}'
         namespace: project
