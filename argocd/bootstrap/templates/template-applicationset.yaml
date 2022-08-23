@@ -20,5 +20,5 @@ spec:
         targetRevision: ${branch}
       # Destination cluster and namespace to deploy the application
       destination:
-        server: '{{server}}'
+        server: '{{cluster}}'
         namespace: ${namespace}
