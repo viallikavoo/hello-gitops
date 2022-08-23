@@ -57,7 +57,7 @@ jobs:
 
     - name: Update Kubernetes resources
       run: |
-       cd kustomize/base
+       cd kustomize/overlays/stag
        kustomize edit set image hello-gitops=ghcr.io/viallikavoo/hello-gitops:$GITHUB_SHA
        cat kustomization.yaml
 

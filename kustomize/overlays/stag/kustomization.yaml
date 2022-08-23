@@ -4,4 +4,10 @@ bases:
 - ../../base
 
 resources:
+- deployment.yaml
+
 namespace: project
+images:
+- name: hello-gitops
+  newName: ghcr.io/viallikavoo/hello-gitops
+  newTag: 58f10fc51c2c9d3c3c0d067271a96eea400b47d1
