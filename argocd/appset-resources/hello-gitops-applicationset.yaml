@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: hello-gitops
+  namespace: project
+spec:
+  generators:
+    - list:
+        elements:
+          - cluster: stag
+            #     - cluster: stag2
+  template:
+    metadata:
+      name: 'hello-gitops-{{cluster}}'
+    spec:
+      project: project
+      source:
+        path: kustomize/overlays/{{cluster}}
+        repoURL: git@github.com:viallikavoo/hello-gitops.git
+        targetRevision: main
+      # Destination cluster and namespace to deploy the application
+      destination:
+        server: '{{server}}'
+        namespace: project
