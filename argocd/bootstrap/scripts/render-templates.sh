@@ -32,9 +32,6 @@ yq e '
   .spec.template.spec.destination.namespace = strenv(namespace)
 ' $GITHUB_WORKSPACE/argocd/bootstrap/templates/template-applicationset.yaml > $APP_SET_FOLDER/$appName-applicationset.yaml
 
-yq e '
-  .metadata.name = strenv(appName)
-' $GITHUB_WORKSPACE/argocd/bootstrap/templates/template-project.yaml > $GEN_FOLDER/$appName-project.yaml
 
 yq e '
   .metadata.name = strenv(appName) |
