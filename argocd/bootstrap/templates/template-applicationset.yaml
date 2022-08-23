@@ -5,14 +5,16 @@ metadata:
   namespace: ${namespace}
 spec:
   generators:
-  - clusters: {}
-  template:
+  - list:
+      elements:
+      - cluster: stag
+#     - cluster: stag2
     metadata:
-      name: 'hello-gitops-{{name}}'
+      name: 'hello-gitops-{{cluster}}'
     spec:
       project: ${appName}
       source:
-        path: kustomize/overlays/{{name}}
+        path: kustomize/overlays/{{cluster}}
         repoURL: ${repoURL}
         targetRevision: ${branch}
       # Destination cluster and namespace to deploy the application
