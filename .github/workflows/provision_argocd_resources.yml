@@ -19,7 +19,3 @@ jobs:
         cd argocd/bootstrap/scripts
         chmod +x argocd-bootstrap.sh
         ./argocd-bootstrap.sh
-
-    - name: Cleanup
-      run: |
-        rm /usr/local/bin/argocd /usr/local/bin/jq
