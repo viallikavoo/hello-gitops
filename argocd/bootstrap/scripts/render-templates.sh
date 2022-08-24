@@ -56,5 +56,5 @@ yq e '
   .spec.selector.app = strenv(appName)
 ' $GITHUB_WORKSPACE/argocd/bootstrap/templates/kustomize/base/service.yaml > $KUSTOMIZE_BASE_FOLDER/service.yaml
 
-cp $GITHUB_WORKSPACE/argocd/bootstrap/templates/kustomize/base/kustomization.yaml > $KUSTOMIZE_BASE_FOLDER/kustomization.yaml
+cp $GITHUB_WORKSPACE/argocd/bootstrap/templates/kustomize/base/kustomization.yaml $KUSTOMIZE_BASE_FOLDER/kustomization.yaml
 
