@@ -7,4 +7,4 @@ namespace: project
 images:
 - name: hello-gitops
   newName: ghcr.io/viallikavoo/hello-gitops
-  newTag: 49256b43ecdb02ddfabdea2f2e2b46830dc00341
+  newTag: adbed7024e6925a562c6de88790cb7919eafaf05
