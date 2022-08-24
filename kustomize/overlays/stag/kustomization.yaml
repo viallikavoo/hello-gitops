@@ -1,11 +1,10 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-bases:
-  - ../../base
-  - deployment.yaml
 resources:
+- ../../base
+- deployment.yaml
 namespace: project
 images:
-  - name: hello-gitops
-    newName: ghcr.io/viallikavoo/hello-gitops
-    newTag: 7a99da23a832123a2e57c565697ab24681f32dc6
+- name: hello-gitops
+  newName: ghcr.io/viallikavoo/hello-gitops
+  newTag: 677f9eb902741c9288f521b2aa90831e886e0e08
