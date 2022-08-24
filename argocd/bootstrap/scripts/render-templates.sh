@@ -13,6 +13,21 @@ mkdir -p $APP_SET_FOLDER $GEN_FOLDER $KUSTOMIZE_BASE_FOLDER
 for env in ${ENVIRONMENTS[@]}; do
     mkdir -p $KUSTOMIZE_OVERLAYS_FOLDER/$env
     cp $GITHUB_WORKSPACE/argocd/bootstrap/templates/kustomize/overlays/$env/kustomization.yaml $KUSTOMIZE_OVERLAYS_FOLDER/$env/
+    yq e '
+      .metadata.name = strenv(appName) |
+      .metadata.labels.app = strenv(appName) |
+      .spec.selector.matchLabels.app = strenv(appName) |
+      .spec.template.metadata.labels.app = strenv(appName) |
+      .spec.template.spec.containers[0].image = strenv(appName) |
+      .spec.template.spec.containers[0].name = strenv(appName) |
+      .spec.template.spec.imagePullSecrets[0].name = "dockerconfigjson-github-com"
+    ' $GITHUB_WORKSPACE/argocd/bootstrap/templates/kustomize/overlays/${env}/deployment.yaml > $KUSTOMIZE_OVERLAYS_FOLDER/$env/deployment.yaml
+
+    yq e '
+      .images[0].name = strenv(appName) |
+      .images[0].newName = strenv(registry)+"/"+strenv(appName)
+    ' $GITHUB_WORKSPACE/argocd/bootstrap/templates/kustomize/overlays/${env}/kustomization.yaml > $KUSTOMIZE_OVERLAYS_FOLDER/$env/kustomization.yaml
+
 done
 
 yq e '
@@ -33,15 +48,7 @@ yq e '
 ' $GITHUB_WORKSPACE/argocd/bootstrap/templates/template-applicationset.yaml > $APP_SET_FOLDER/$appName-applicationset.yaml
 
 
-yq e '
-  .metadata.name = strenv(appName) |
-  .metadata.labels.app = strenv(appName) |
-  .spec.selector.matchLabels.app = strenv(appName) |
-  .spec.template.metadata.labels.app = strenv(appName) |
-  .spec.template.spec.containers[0].image = strenv(appName) |
-  .spec.template.spec.containers[0].name = strenv(appName) |
-  .spec.template.spec.imagePullSecrets[0].name = strenv(appName)+"-pull-secret"
-' $GITHUB_WORKSPACE/argocd/bootstrap/templates/kustomize/base/deployment.yaml > $KUSTOMIZE_BASE_FOLDER/deployment.yaml
+
 
 yq e '
   .metadata.name = strenv(appName) |
@@ -49,7 +56,3 @@ yq e '
   .spec.selector.app = strenv(appName)
 ' $GITHUB_WORKSPACE/argocd/bootstrap/templates/kustomize/base/service.yaml > $KUSTOMIZE_BASE_FOLDER/service.yaml
 
-yq e '
-  .images[0].name = strenv(appName) |
-  .images[0].newName = strenv(registry)+"/"+strenv(appName)
-' $GITHUB_WORKSPACE/argocd/bootstrap/templates/kustomize/base/kustomization.yaml > $KUSTOMIZE_BASE_FOLDER/kustomization.yaml
