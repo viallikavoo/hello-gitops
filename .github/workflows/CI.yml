@@ -6,6 +6,7 @@ on:
 env:
   REGISTRY: ghcr.io
   APP_NAME: hello-gitops
+  BRANCH_NAME: ${{ github.head_ref || github.ref_name }} 
 jobs:
   build:
     name: Build
@@ -15,6 +16,12 @@ jobs:
       uses: actions/setup-go@v2
       with:
         go-version: ^1.14
+    
+    - name: Print
+      id: vars
+      run: echo $BRANCH_NAME
+    
+   
 
     - name: Check out code
       uses: actions/checkout@v2
